@@ -51,6 +51,7 @@ export class AiWorkflowBuilderService {
 		});
 	}
 
+	// @ts-expect-error - Temporarily unused during cache testing
 	private async getApiProxyAuthHeaders(user: IUser, useDeprecatedCredentials = false) {
 		assert(this.client);
 
@@ -71,6 +72,7 @@ export class AiWorkflowBuilderService {
 
 	private async setupModels(
 		user: IUser,
+		// @ts-expect-error - Temporarily unused during cache testing
 		useDeprecatedCredentials = false,
 	): Promise<{
 		anthropicClaude: ChatAnthropic;
@@ -79,36 +81,38 @@ export class AiWorkflowBuilderService {
 	}> {
 		try {
 			// If client is provided, use it for API proxy
-			if (this.client) {
-				const authHeaders = await this.getApiProxyAuthHeaders(user, useDeprecatedCredentials);
+			// if (this.client) {
+			// 	const authHeaders = await this.getApiProxyAuthHeaders(user, useDeprecatedCredentials);
 
-				// Extract baseUrl from client configuration
-				const baseUrl = this.client.getApiProxyBaseUrl();
+			// 	// Extract baseUrl from client configuration
+			// 	const baseUrl = this.client.getApiProxyBaseUrl();
 
-				const anthropicClaude = await AiWorkflowBuilderService.getAnthropicClaudeModel({
-					baseUrl: baseUrl + '/anthropic',
-					authHeaders,
-				});
+			// 	const anthropicClaude = await AiWorkflowBuilderService.getAnthropicClaudeModel({
+			// 		baseUrl: baseUrl + '/anthropic',
+			// 		authHeaders,
+			// 	});
 
-				const tracingClient = new TracingClient({
-					apiKey: '-',
-					apiUrl: baseUrl + '/langsmith',
-					autoBatchTracing: false,
-					traceBatchConcurrency: 1,
-					fetchOptions: {
-						headers: {
-							...authHeaders,
-						},
-					},
-				});
+			// 	const tracingClient = new TracingClient({
+			// 		apiKey: '-',
+			// 		apiUrl: baseUrl + '/langsmith',
+			// 		autoBatchTracing: false,
+			// 		traceBatchConcurrency: 1,
+			// 		fetchOptions: {
+			// 			headers: {
+			// 				...authHeaders,
+			// 			},
+			// 		},
+			// 	});
 
-				return { tracingClient, anthropicClaude, authHeaders };
-			}
+			// 	return { tracingClient, anthropicClaude, authHeaders };
+			// }
 
 			// If base URL is not set, use environment variables
 			const anthropicClaude = await AiWorkflowBuilderService.getAnthropicClaudeModel({
 				apiKey: process.env.N8N_AI_ANTHROPIC_KEY ?? '',
 			});
+
+			console.log(process.env.N8N_AI_ANTHROPIC_KEY);
 
 			return { anthropicClaude };
 		} catch (error) {
