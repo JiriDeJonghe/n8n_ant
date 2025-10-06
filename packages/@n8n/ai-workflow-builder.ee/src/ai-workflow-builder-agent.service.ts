@@ -51,7 +51,6 @@ export class AiWorkflowBuilderService {
 		});
 	}
 
-	// @ts-expect-error - Temporarily unused during cache testing
 	private async getApiProxyAuthHeaders(user: IUser, useDeprecatedCredentials = false) {
 		assert(this.client);
 
@@ -72,7 +71,6 @@ export class AiWorkflowBuilderService {
 
 	private async setupModels(
 		user: IUser,
-		// @ts-expect-error - Temporarily unused during cache testing
 		useDeprecatedCredentials = false,
 	): Promise<{
 		anthropicClaude: ChatAnthropic;

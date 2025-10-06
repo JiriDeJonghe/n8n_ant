@@ -40,7 +40,7 @@ async function runCacheQualityTest(config: CacheTestConfig): Promise<void> {
 	console.log(pc.cyan('║      Prompt Caching Quality Test                      ║'));
 	console.log(pc.cyan('╚════════════════════════════════════════════════════════╝\n'));
 
-	const { agent, llm } = await setupEnvironment();
+	const { llm } = await setupEnvironment();
 
 	const allResults: TestResult[][] = [];
 	const iterationStats: CacheStatistics[] = [];
@@ -60,12 +60,13 @@ async function runCacheQualityTest(config: CacheTestConfig): Promise<void> {
 		for (const testCase of config.testCases) {
 			console.log(pc.dim(`  Running: ${testCase.name}...`));
 
-			// Create cache logger for this test
 			const cacheLogger = new CacheLogger(iteration + 1, testCase.id, config.outputDir);
 			cacheLogger.logTestHeader(testCase.name, iteration + 1);
 
+			const freshAgent = await setupEnvironment().then((env) => env.agent);
+
 			const result = await runSingleTest(
-				agent,
+				freshAgent,
 				llm,
 				testCase,
 				`test-user-iter-${iteration}`,
